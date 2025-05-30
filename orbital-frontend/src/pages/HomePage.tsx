@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { signInWithPopup, auth, provider } from '../firebase.ts';
+import { signInWithPopup, auth, provider } from '../firebase';
+import axios from "axios";
 
 const HomePage: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -11,9 +12,39 @@ const HomePage: React.FC = () => {
       const token = await result.user.getIdToken();
       setUser(result.user);
       console.log("✅ Logged in:", result.user.displayName);
-      console.log("🪪 Token:", token); // You’ll send this to backend later
+      console.log("🪪 Token:", token);
     } catch (error) {
       console.error("❌ Login failed:", error);
+    }
+  };
+
+  const saveStudyPlan = async () => {
+    try {
+      const token = await auth.currentUser?.getIdToken();
+
+      if (!token) {
+        console.error("❌ No user token found");
+        return;
+      }
+
+      const planData = {
+        modules: ["CS1101S", "CS2030", "IS1103"]
+      };
+
+      const response = await axios.post(
+        "http://localhost:8000/plans/save",
+        { json_data: JSON.stringify(planData) },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      console.log("✅ Study plan saved:", response.data);
+    } catch (error) {
+      console.error("❌ Save failed:", error);
     }
   };
 
@@ -32,7 +63,15 @@ const HomePage: React.FC = () => {
         {/* 🔐 Google Login Section */}
         <div className="mb-8">
           {user ? (
-            <p className="text-green-700 font-semibold">Welcome, {user.displayName}!</p>
+            <>
+              <p className="text-green-700 font-semibold">Welcome, {user.displayName}!</p>
+              <button
+                onClick={saveStudyPlan}
+                className="mt-4 bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700"
+              >
+                Save My Study Plan
+              </button>
+            </>
           ) : (
             <button
               onClick={handleLogin}
