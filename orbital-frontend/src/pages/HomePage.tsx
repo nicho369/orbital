@@ -1,8 +1,22 @@
-import React from 'react';
-// import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { signInWithPopup, auth, provider } from '../firebase.ts';
 
 const HomePage: React.FC = () => {
+  const [user, setUser] = useState<any>(null);
+
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const token = await result.user.getIdToken();
+      setUser(result.user);
+      console.log("✅ Logged in:", result.user.displayName);
+      console.log("🪪 Token:", token); // You’ll send this to backend later
+    } catch (error) {
+      console.error("❌ Login failed:", error);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-white text-gray-800 p-6 md:p-12">
       <section className="max-w-4xl mx-auto text-center">
@@ -13,6 +27,20 @@ const HomePage: React.FC = () => {
           <p className="mt-4 text-lg text-gray-700">
             Our WebApp helps SoC students plan out their 4-year academic journey in NUS with ease.
           </p>
+        </div>
+
+        {/* 🔐 Google Login Section */}
+        <div className="mb-8">
+          {user ? (
+            <p className="text-green-700 font-semibold">Welcome, {user.displayName}!</p>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className="bg-blue-700 text-white px-4 py-2 rounded-xl hover:bg-blue-800"
+            >
+              Sign in with Google
+            </button>
+          )}
         </div>
 
         <section className="grid md:grid-cols-2 gap-8 text-left mt-10">
@@ -41,9 +69,8 @@ const HomePage: React.FC = () => {
         <div className="mt-12">
           <Link to="/planner">
             <button className="text-white bg-blue-700 hover:bg-blue-800 text-lg px-6 py-3 rounded-xl">
-  Start Planning
-</button>
-
+              Start Planning
+            </button>
           </Link>
         </div>
 
