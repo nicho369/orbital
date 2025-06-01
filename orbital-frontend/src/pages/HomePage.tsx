@@ -49,19 +49,15 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-white text-gray-800 p-6 md:p-12">
+    <main className="min-h-screen bg-white text-gray-800 pt-0 md:pt-0 px-6 md:px-12">
       <section className="max-w-4xl mx-auto text-center">
         <div className="mb-8">
-          <img src="/logo.png" alt="SoC GradWise Logo" className="w-20 mx-auto" />
           <h1 className="text-4xl font-bold text-blue-800">SoC GradWise</h1>
           <p className="text-xl mt-2 font-medium text-blue-600">Plan Smart. Graduate Smoothly.</p>
-          <p className="mt-4 text-lg text-gray-700">
-            Our WebApp helps SoC students plan out their 4-year academic journey in NUS with ease.
-          </p>
         </div>
 
         {/* 🔐 Google Login Section */}
-        <div className="mb-8">
+        <div className="mb-20">
           {user ? (
             <>
               <p className="text-green-700 font-semibold">Welcome, {user.displayName}!</p>
@@ -84,22 +80,7 @@ const HomePage: React.FC = () => {
 
         <section className="grid md:grid-cols-2 gap-8 text-left mt-10">
           <FeatureCard
-            icon="📅"
-            title="Interactive Module Planner"
-            description="Drag & drop modules into semesters to customize your academic plan."
-          />
-          <FeatureCard
-            icon="⚠️"
-            title="Inbuilt Prerequisite Checking"
-            description="Get warnings when selecting modules without fulfilling prerequisites."
-          />
-          <FeatureCard
-            icon="👤"
-            title="Personal Profiles"
-            description="Save and access personalized study plans by logging in."
-          />
-          <FeatureCard
-            icon="🎓"
+            icon=""
             title="Graduation Progress"
             description="Track your progress towards graduation requirements."
           />
