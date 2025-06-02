@@ -27,8 +27,9 @@ const HomePage: React.FC = () => {
         return;
       }
 
+      // hardcoded data for testing
       const planData = {
-        modules: ["CS1101S", "CS2030", "IS1103"]
+        modules: ["CS1101S", "CS2030", "IS1108"]
       };
 
       const response = await axios.post(
@@ -48,6 +49,37 @@ const HomePage: React.FC = () => {
     }
   };
 
+  const loadStudyPlans = async () => {
+  try {
+    const token = await auth.currentUser?.getIdToken();
+
+    if (!token) {
+      console.error("❌ No user token found");
+      return;
+    }
+
+    const response = await axios.get("http://localhost:8000/plans/load", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    const plans = response.data.plans;
+    console.log("✅ Loaded plans:", plans);
+
+    // Optional: Parse and display the latest plan
+    if (plans.length > 0) {
+      const latestPlan = JSON.parse(plans[plans.length - 1]);
+      console.log("📦 Latest plan:", latestPlan);
+    }
+
+  } catch (err) {
+    console.error("❌ Load failed:", err);
+  }
+};
+
+
   return (
     <main className="min-h-screen bg-white text-gray-800 pt-0 md:pt-0 px-6 md:px-12">
       <section className="max-w-4xl mx-auto text-center">
@@ -56,7 +88,7 @@ const HomePage: React.FC = () => {
           <p className="text-xl mt-2 font-medium text-blue-600">Plan Smart. Graduate Smoothly.</p>
         </div>
 
-        {/* 🔐 Google Login Section */}
+        {/* Google Login Section */}
         <div className="mb-20">
           {user ? (
             <>
@@ -67,6 +99,13 @@ const HomePage: React.FC = () => {
               >
                 Save My Study Plan
               </button>
+              <button
+                onClick={loadStudyPlans}
+                className="mt-4 ml-4 bg-purple-600 text-white px-4 py-2 rounded-xl hover:bg-purple-700"
+              >
+                Load My Study Plans
+              </button>
+
             </>
           ) : (
             <button
