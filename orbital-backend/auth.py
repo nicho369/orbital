@@ -1,9 +1,12 @@
 import firebase_admin
 from firebase_admin import credentials, auth
 from fastapi import Request, HTTPException, Depends
+import json
+import os
+from firebase_admin import credentials
 
-# Load credentials once at startup
-cred = credentials.Certificate("firebase_admin_sdk.json")
+cred_dict = json.loads(os.getenv("FIREBASE_CREDENTIALS_JSON"))
+cred = credentials.Certificate(cred_dict)
 firebase_admin.initialize_app(cred)
 
 async def verify_token(request: Request):
