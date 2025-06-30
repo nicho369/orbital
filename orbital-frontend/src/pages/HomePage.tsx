@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { signInWithPopup, auth, provider } from '../firebase';
+import { signInWithPopup, auth, provider, signOut } from '../firebase';
 import axios from "axios";
+import ModuleList from "../components/ModuleList";
 
 const HomePage: React.FC = () => {
   const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -15,6 +23,16 @@ const HomePage: React.FC = () => {
       console.log("🪪 Token:", token);
     } catch (error) {
       console.error("❌ Login failed:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      console.log("🚪 Logged out");
+    } catch (error) {
+      console.error("❌ Logout failed:", error);
     }
   };
 
@@ -33,7 +51,7 @@ const HomePage: React.FC = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/plans/save",
+        "https://orbital-production-efe9.up.railway.app/plans/save",
         { json_data: JSON.stringify(planData) },
         {
           headers: {
@@ -58,7 +76,7 @@ const HomePage: React.FC = () => {
       return;
     }
 
-    const response = await axios.get("http://localhost:8000/plans/load", {
+    const response = await axios.get("https://orbital-production-efe9.up.railway.app/plans/load", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -81,8 +99,8 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <main className="min-h-screen bg-white text-gray-800 pt-0 md:pt-0 px-6 md:px-12">
-      <section className="max-w-4xl mx-auto text-center">
+    <main className="min-h-screen bg-white text-gray-800 flex flex-col items-center justify-start pt-8 px-2">
+      <section className="w-full max-w-2xl text-center mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-blue-800">SoC GradWise</h1>
           <p className="text-xl mt-2 font-medium text-blue-600">Plan Smart. Graduate Smoothly.</p>
@@ -105,7 +123,13 @@ const HomePage: React.FC = () => {
               >
                 Load My Study Plans
               </button>
-
+              {/* Logout button */}
+              <button
+                onClick={handleLogout}
+                className="mt-4 ml-4 bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-700"
+              >
+                Logout
+              </button>
             </>
           ) : (
             <button
@@ -133,9 +157,16 @@ const HomePage: React.FC = () => {
           </Link>
         </div>
 
+        {/* Only show module dropdown after login */}
+        {user ? (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold mb-4">Available Modules</h2>
+            <ModuleList />
+          </div>
+        ) : null}
+
         <footer className="mt-16 text-sm text-gray-600">
           <p>Powered by React, Firebase, Flask</p>
-          <p>Team Members: Ray Chua & Nicholas Chin</p>
         </footer>
       </section>
     </main>

@@ -5,16 +5,20 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
 from models import StudyPlan
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/plans", tags=["Plans"])
 
+class StudyPlanIn(BaseModel):
+    json_data: str
+
 @router.post("/save")
 def save_study_plan(
-    json_data: str,
+    plan_in: StudyPlanIn,
     db: Session = Depends(get_db),
     user_id: str = Depends(verify_token)
 ):
-    plan = StudyPlan(user_id=user_id, json_data=json_data)
+    plan = StudyPlan(user_id=user_id, json_data=plan_in.json_data)
     db.add(plan)
     db.commit()
     db.refresh(plan)

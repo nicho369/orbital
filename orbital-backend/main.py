@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from routes import plans
+from routes import nusmods
+
 
 app = FastAPI()
 app.include_router(plans.router)
+app.include_router(nusmods.router)
 
 
 # Allow frontend to make requests to backend

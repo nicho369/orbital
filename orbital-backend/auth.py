@@ -5,8 +5,14 @@ import json
 import os
 from firebase_admin import credentials
 
-cred_dict = json.loads(os.getenv("FIREBASE_CREDENTIALS_JSON"))
-cred = credentials.Certificate(cred_dict)
+
+# Prefer environment variable, but fall back to file for local dev
+firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
+if firebase_credentials_json:
+    cred_dict = json.loads(firebase_credentials_json)
+    cred = credentials.Certificate(cred_dict)
+else:
+    cred = credentials.Certificate("firebase_admin_sdk.json")
 firebase_admin.initialize_app(cred)
 
 async def verify_token(request: Request):
