@@ -43,7 +43,7 @@ const PlannerPage: React.FC = () => {
     // Fetch module info from backend
     try {
       const res = await axios.get(
-        `http://localhost:8000/nusmods/module/${ACADEMIC_YEAR}/${modCode}`
+        `https://orbital-production-efe9.up.railway.app/nusmods/module/${ACADEMIC_YEAR}/${modCode}`
       );
       const modInfo = res.data;
       let unmet: string[] = [];
@@ -102,7 +102,7 @@ const PlannerPage: React.FC = () => {
     const token = await user.getIdToken();
     try {
       await axios.post(
-        "http://localhost:8000/plans/save",
+        "https://orbital-production-efe9.up.railway.app/plans/save",
         { json_data: JSON.stringify(plan) },
         {
           headers: {
@@ -125,7 +125,7 @@ const PlannerPage: React.FC = () => {
     }
     const token = await user.getIdToken();
     try {
-      const res = await axios.get("http://localhost:8000/plans/load", {
+      const res = await axios.get("https://orbital-production-efe9.up.railway.app/plans/load", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

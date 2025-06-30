@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/plans/save",
+        "https://orbital-production-efe9.up.railway.app/plans/save",
         { json_data: JSON.stringify(planData) },
         {
           headers: {
@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
       return;
     }
 
-    const response = await axios.get("http://localhost:8000/plans/load", {
+    const response = await axios.get("https://orbital-production-efe9.up.railway.app/plans/load", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"
