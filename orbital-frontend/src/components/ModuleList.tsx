@@ -11,7 +11,7 @@ const ModuleList: React.FC = () => {
   const [selected, setSelected] = useState<string>("");
 
   useEffect(() => {
-    fetch("http://localhost:8000/nusmods/modules/2024-2025")
+    fetch("https://orbital-production-efe9.up.railway.app/nusmods/modules/2024-2025")
       .then((res) => res.json())
       .then((data) => {
         setModules(data);
