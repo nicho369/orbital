@@ -47,12 +47,12 @@ const PlannerPage: React.FC = () => {
     }
     if (typeof tree === "object" && tree !== null) {
       if (tree.and) {
-        return tree.and.flatMap(sub => getUnmetPrereqs(sub, planned));
+        return tree.and.flatMap((sub: any) => getUnmetPrereqs(sub, planned));
       }
       if (tree.or) {
         // For 'or', only unmet if none are planned
-        const unmet = tree.or.filter(sub => getUnmetPrereqs(sub, planned).length > 0);
-        return unmet.length === tree.or.length ? tree.or.flatMap(sub => getUnmetPrereqs(sub, planned)) : [];
+        const unmet = tree.or.filter((sub: any) => getUnmetPrereqs(sub, planned).length > 0);
+        return unmet.length === tree.or.length ? tree.or.flatMap((sub: any) => getUnmetPrereqs(sub, planned)) : [];
       }
     }
     return [];
