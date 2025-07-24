@@ -71,13 +71,14 @@ const PlannerPage: React.FC = () => {
       const modInfo = res.data;
       let unmet: string[] = [];
       let unmetPrereqs: string[] = [];
-      // Check prerequisites (simple string search for now)
+      // Check prerequisites (improved logic)
       if (modInfo.prereqTree) {
-        const planned = getPlannedModulesBefore(selectedSemester).map((m) => m.toUpperCase());
-        // Simple check: if prereqTree is a string, see if it's in planned
-        // (NUSMods prereqTree can be a string, array, or object; here we handle string/array)
+        const planned = getPlannedModulesBefore(selectedSemester);
+        // Improved check: match normalized codes
         const checkTree = (tree: any): boolean => {
-          if (typeof tree === "string") return planned.includes(tree.toUpperCase());
+          if (typeof tree === "string") {
+            return planned.includes(normalizeModCode(tree));
+          }
           if (Array.isArray(tree)) return tree.every(checkTree);
           if (typeof tree === "object" && tree !== null) {
             if (tree.and) return tree.and.every(checkTree);
@@ -87,7 +88,8 @@ const PlannerPage: React.FC = () => {
         };
         if (!checkTree(modInfo.prereqTree)) {
           unmet.push("prerequisites");
-          unmetPrereqs = getUnmetPrereqs(modInfo.prereqTree, planned);
+          // Show only unique, normalized codes for unmet prereqs
+          unmetPrereqs = Array.from(new Set(getUnmetPrereqs(modInfo.prereqTree, planned).map(normalizeModCode)));
         }
       }
       // Check corequisites (if any)
