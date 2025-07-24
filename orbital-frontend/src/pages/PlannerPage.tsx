@@ -155,6 +155,10 @@ const PlannerPage: React.FC = () => {
     setGrades((prev) => ({ ...prev, [mod]: grade }));
   };
 
+  const gradeOptions = [
+    "A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "F"
+  ];
+
   return (
     <div className="max-w-3xl mx-auto p-6">
       {/* Progress Bar */}
@@ -221,14 +225,16 @@ const PlannerPage: React.FC = () => {
               {(plan[sem] || []).map((mod, idx) => (
                 <li key={idx} className="text-blue-800 flex items-center gap-2">
                   <span>{mod}</span>
-                  <input
-                    type="text"
-                    placeholder="Grade"
+                  <select
                     value={grades[mod] || ""}
                     onChange={e => handleGradeChange(mod, e.target.value)}
-                    className="ml-2 border rounded px-2 py-1 w-16 text-sm"
-                    maxLength={2}
-                  />
+                    className="ml-2 border rounded px-2 py-1 w-20 text-sm"
+                  >
+                    <option value="">Grade</option>
+                    {gradeOptions.map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
                 </li>
               ))}
             </ul>
