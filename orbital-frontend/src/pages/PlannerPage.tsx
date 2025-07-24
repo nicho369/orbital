@@ -26,6 +26,7 @@ const PlannerPage: React.FC = () => {
   const [selectedSemester, setSelectedSemester] = useState<string>(semesters[0]);
   const [moduleInput, setModuleInput] = useState<string>("");
   const [warnings, setWarnings] = useState<Warning[]>([]);
+  const [grades, setGrades] = useState<{ [mod: string]: string }>({});
 
   // Helper to get all modules planned before a given semester
   const getPlannedModulesBefore = (semester: string) => {
@@ -149,6 +150,11 @@ const PlannerPage: React.FC = () => {
   const completedModules = Object.values(plan).flat().length;
   const progressPercent = Math.min(100, Math.round((completedModules / TOTAL_MODULES_REQUIRED) * 100));
 
+  // Add grade input handler
+  const handleGradeChange = (mod: string, grade: string) => {
+    setGrades((prev) => ({ ...prev, [mod]: grade }));
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-6">
       {/* Progress Bar */}
@@ -213,7 +219,17 @@ const PlannerPage: React.FC = () => {
             <h2 className="font-bold text-lg mb-2">{sem}</h2>
             <ul>
               {(plan[sem] || []).map((mod, idx) => (
-                <li key={idx} className="text-blue-800">{mod}</li>
+                <li key={idx} className="text-blue-800 flex items-center gap-2">
+                  <span>{mod}</span>
+                  <input
+                    type="text"
+                    placeholder="Grade"
+                    value={grades[mod] || ""}
+                    onChange={e => handleGradeChange(mod, e.target.value)}
+                    className="ml-2 border rounded px-2 py-1 w-16 text-sm"
+                    maxLength={2}
+                  />
+                </li>
               ))}
             </ul>
           </div>
