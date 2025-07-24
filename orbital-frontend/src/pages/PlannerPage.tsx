@@ -38,6 +38,26 @@ const PlannerPage: React.FC = () => {
     return mods;
   };
 
+  const getUnmetPrereqs = (tree: any, planned: string[]): string[] => {
+    if (typeof tree === "string") {
+      return planned.includes(tree.toUpperCase()) ? [] : [tree.toUpperCase()];
+    }
+    if (Array.isArray(tree)) {
+      return tree.flatMap(sub => getUnmetPrereqs(sub, planned));
+    }
+    if (typeof tree === "object" && tree !== null) {
+      if (tree.and) {
+        return tree.and.flatMap(sub => getUnmetPrereqs(sub, planned));
+      }
+      if (tree.or) {
+        // For 'or', only unmet if none are planned
+        const unmet = tree.or.filter(sub => getUnmetPrereqs(sub, planned).length > 0);
+        return unmet.length === tree.or.length ? tree.or.flatMap(sub => getUnmetPrereqs(sub, planned)) : [];
+      }
+    }
+    return [];
+  };
+
   const addModule = async () => {
     if (!moduleInput) return;
     const modCode = moduleInput.trim().toUpperCase();
@@ -48,6 +68,7 @@ const PlannerPage: React.FC = () => {
       );
       const modInfo = res.data;
       let unmet: string[] = [];
+      let unmetPrereqs: string[] = [];
       // Check prerequisites (simple string search for now)
       if (modInfo.prereqTree) {
         const planned = getPlannedModulesBefore(selectedSemester).map((m) => m.toUpperCase());
@@ -64,6 +85,7 @@ const PlannerPage: React.FC = () => {
         };
         if (!checkTree(modInfo.prereqTree)) {
           unmet.push("prerequisites");
+          unmetPrereqs = getUnmetPrereqs(modInfo.prereqTree, planned);
         }
       }
       // Check corequisites (if any)
@@ -78,7 +100,11 @@ const PlannerPage: React.FC = () => {
         }
       }
       if (unmet.length > 0) {
-        alert(`${modCode}: Unmet ${unmet.join(" and ")}`);
+        let msg = `${modCode}: Unmet ${unmet.join(" and ")}`;
+        if (unmetPrereqs.length > 0) {
+          msg += `\nYou need to complete: ${unmetPrereqs.join(", ")}`;
+        }
+        alert(msg);
         setModuleInput("");
         return;
       }
