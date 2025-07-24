@@ -144,8 +144,26 @@ const PlannerPage: React.FC = () => {
     }
   };
 
+  // Graduation requirement: 40 modules (160 MCs, assuming 4 MCs per module)
+  const TOTAL_MODULES_REQUIRED = 40;
+  const completedModules = Object.values(plan).flat().length;
+  const progressPercent = Math.min(100, Math.round((completedModules / TOTAL_MODULES_REQUIRED) * 100));
+
   return (
     <div className="max-w-3xl mx-auto p-6">
+      {/* Progress Bar */}
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-2 text-center">Graduation Progress</h2>
+        <div className="w-full bg-gray-200 rounded-full h-6 mb-2">
+          <div
+            className="bg-blue-600 h-6 rounded-full transition-all duration-500"
+            style={{ width: `${progressPercent}%` }}
+          ></div>
+        </div>
+        <div className="text-center text-gray-700 font-medium">
+          {completedModules} / {TOTAL_MODULES_REQUIRED} modules completed ({progressPercent}%)
+        </div>
+      </div>
       <div className="mb-4">
         <Link to="/">
           <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">Back to Home</button>
