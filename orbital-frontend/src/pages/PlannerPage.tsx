@@ -28,6 +28,8 @@ const PlannerPage: React.FC = () => {
   const [warnings, setWarnings] = useState<Warning[]>([]);
   const [grades, setGrades] = useState<{ [mod: string]: string }>({});
 
+  const normalizeModCode = (code: string) => code.split(":")[0].toUpperCase();
+
   // Helper to get all modules planned before a given semester
   const getPlannedModulesBefore = (semester: string) => {
     const idx = semesters.indexOf(semester);
@@ -35,22 +37,22 @@ const PlannerPage: React.FC = () => {
     for (let i = 0; i < idx; i++) {
       mods = mods.concat(plan[semesters[i]] || []);
     }
-    return mods;
+    return mods.map(normalizeModCode);
   };
 
   const getUnmetPrereqs = (tree: any, planned: string[]): string[] => {
     if (typeof tree === "string") {
-      return planned.includes(tree.toUpperCase()) ? [] : [tree.toUpperCase()];
+      const modOnly = normalizeModCode(tree);
+      return planned.includes(modOnly) ? [] : [tree.toUpperCase()];
     }
     if (Array.isArray(tree)) {
-      return tree.flatMap(sub => getUnmetPrereqs(sub, planned));
+      return tree.flatMap((sub: any) => getUnmetPrereqs(sub, planned));
     }
     if (typeof tree === "object" && tree !== null) {
       if (tree.and) {
         return tree.and.flatMap((sub: any) => getUnmetPrereqs(sub, planned));
       }
       if (tree.or) {
-        // For 'or', only unmet if none are planned
         const unmet = tree.or.filter((sub: any) => getUnmetPrereqs(sub, planned).length > 0);
         return unmet.length === tree.or.length ? tree.or.flatMap((sub: any) => getUnmetPrereqs(sub, planned)) : [];
       }
