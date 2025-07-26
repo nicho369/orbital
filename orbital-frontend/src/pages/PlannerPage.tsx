@@ -40,21 +40,24 @@ const PlannerPage: React.FC = () => {
     return mods.map(normalizeModCode);
   };
 
-  const getUnmetPrereqs = (tree: any, planned: string[]): string[] => {
+  // Type definition for prerequisite tree structure
+  type PrereqTree = string | PrereqTree[] | { and: PrereqTree[] } | { or: PrereqTree[] };
+
+  const getUnmetPrereqs = (tree: PrereqTree, planned: string[]): string[] => {
     if (typeof tree === "string") {
       const modOnly = normalizeModCode(tree);
       return planned.includes(modOnly) ? [] : [tree.toUpperCase()];
     }
     if (Array.isArray(tree)) {
-      return tree.flatMap((sub: any) => getUnmetPrereqs(sub, planned));
+      return tree.flatMap((sub: PrereqTree) => getUnmetPrereqs(sub, planned));
     }
     if (typeof tree === "object" && tree !== null) {
-      if (tree.and) {
-        return tree.and.flatMap((sub: any) => getUnmetPrereqs(sub, planned));
+      if ('and' in tree) {
+        return tree.and.flatMap((sub: PrereqTree) => getUnmetPrereqs(sub, planned));
       }
-      if (tree.or) {
-        const unmet = tree.or.filter((sub: any) => getUnmetPrereqs(sub, planned).length > 0);
-        return unmet.length === tree.or.length ? tree.or.flatMap((sub: any) => getUnmetPrereqs(sub, planned)) : [];
+      if ('or' in tree) {
+        const unmet = tree.or.filter((sub: PrereqTree) => getUnmetPrereqs(sub, planned).length > 0);
+        return unmet.length === tree.or.length ? tree.or.flatMap((sub: PrereqTree) => getUnmetPrereqs(sub, planned)) : [];
       }
     }
     return [];
@@ -69,20 +72,20 @@ const PlannerPage: React.FC = () => {
         `https://orbital-production-efe9.up.railway.app/nusmods/module/${ACADEMIC_YEAR}/${modCode}`
       );
       const modInfo = res.data;
-      let unmet: string[] = [];
+      const unmet: string[] = [];
       let unmetPrereqs: string[] = [];
       // Check prerequisites (improved logic)
       if (modInfo.prereqTree) {
         const planned = getPlannedModulesBefore(selectedSemester);
         // Improved check: match normalized codes
-        const checkTree = (tree: any): boolean => {
+        const checkTree = (tree: PrereqTree): boolean => {
           if (typeof tree === "string") {
             return planned.includes(normalizeModCode(tree));
           }
           if (Array.isArray(tree)) return tree.every(checkTree);
           if (typeof tree === "object" && tree !== null) {
-            if (tree.and) return tree.and.every(checkTree);
-            if (tree.or) return tree.or.some(checkTree);
+            if ('and' in tree) return tree.and.every(checkTree);
+            if ('or' in tree) return tree.or.some(checkTree);
           }
           return true;
         };
@@ -118,7 +121,7 @@ const PlannerPage: React.FC = () => {
       }));
       setWarnings((prev) => prev.filter((w) => w.module !== modCode));
       setModuleInput("");
-    } catch (err) {
+    } catch {
       alert(`${modCode}: Module not found or error fetching info`);
       setModuleInput("");
     }
@@ -143,7 +146,7 @@ const PlannerPage: React.FC = () => {
         }
       );
       alert("Plan saved successfully!");
-    } catch (err) {
+    } catch {
       alert("Failed to save plan.");
     }
   };
@@ -170,7 +173,7 @@ const PlannerPage: React.FC = () => {
       } else {
         alert("No saved plans found.");
       }
-    } catch (err) {
+    } catch {
       alert("Failed to load plan.");
     }
   };
@@ -215,6 +218,7 @@ const PlannerPage: React.FC = () => {
           value={selectedSemester}
           onChange={(e) => setSelectedSemester(e.target.value)}
           className="border rounded px-2 py-1"
+          aria-label="Select a semester"
         >
           {semesters.map((sem) => (
             <option key={sem} value={sem}>{sem}</option>
@@ -226,6 +230,7 @@ const PlannerPage: React.FC = () => {
           value={moduleInput}
           onChange={(e) => setModuleInput(e.target.value)}
           className="border rounded px-2 py-1"
+          aria-label="Enter module code"
         />
         <button
           onClick={addModule}
