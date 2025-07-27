@@ -2,27 +2,22 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
-import HomePage from './HomePage';
 import axios from 'axios';
 
 // Mock axios
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// Mock Firebase functions before importing
-const mockOnAuthStateChanged = jest.fn();
-const mockSignInWithPopup = jest.fn();
-const mockSignOut = jest.fn();
+// Mock Firebase module
+jest.mock('../firebase');
 
-jest.mock('../firebase', () => ({
-  signInWithPopup: mockSignInWithPopup,
-  auth: {
-    onAuthStateChanged: mockOnAuthStateChanged,
-    currentUser: null,
-  },
-  provider: {},
-  signOut: mockSignOut,
-}));
+// Import the auth object directly
+import { auth, signInWithPopup, signOut } from '../firebase';
+
+// Cast the mocked functions to get access to Jest mock methods
+const mockAuth = auth as any;
+const mockSignInWithPopup = signInWithPopup as jest.MockedFunction<typeof signInWithPopup>;
+const mockSignOut = signOut as jest.MockedFunction<typeof signOut>;
 
 // Mock ModuleList component
 jest.mock('../components/ModuleList', () => {
@@ -31,10 +26,16 @@ jest.mock('../components/ModuleList', () => {
   };
 });
 
+// Mock window.alert
+global.alert = jest.fn();
+
+// Import the component after mocks are set up
+import HomePage from './HomePage';
+
 describe('HomePage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockOnAuthStateChanged.mockImplementation((callback) => {
+    mockAuth.onAuthStateChanged.mockImplementation((callback: any) => {
       callback(null); // Start with no user
       return jest.fn(); // Return unsubscribe function
     });
@@ -132,7 +133,7 @@ describe('HomePage', () => {
       email: 'test@example.com',
     };
     
-    mockOnAuthStateChanged.mockImplementation((callback) => {
+    mockAuth.onAuthStateChanged.mockImplementation((callback: any) => {
       setTimeout(() => callback(mockUser), 0);
       return jest.fn();
     });
@@ -160,7 +161,7 @@ describe('HomePage', () => {
       email: 'test@example.com',
     };
     
-    mockOnAuthStateChanged.mockImplementation((callback) => {
+    mockAuth.onAuthStateChanged.mockImplementation((callback: any) => {
       setTimeout(() => callback(mockUser), 0);
       return jest.fn();
     });
@@ -189,7 +190,7 @@ describe('HomePage', () => {
       email: 'test@example.com',
     };
     
-    mockOnAuthStateChanged.mockImplementation((callback) => {
+    mockAuth.onAuthStateChanged.mockImplementation((callback: any) => {
       setTimeout(() => callback(mockUser), 0);
       return jest.fn();
     });
@@ -222,7 +223,9 @@ describe('HomePage', () => {
       email: 'test@example.com',
     };
     
-    mockOnAuthStateChanged.mockImplementation((callback) => {
+    mockAuth.onAuthStateChanged.mockImplementation((callback: any) => {
+      // Set currentUser so it's available when the component checks auth.currentUser
+      mockAuth.currentUser = mockUser;
       setTimeout(() => callback(mockUser), 0);
       return jest.fn();
     });
@@ -259,7 +262,9 @@ describe('HomePage', () => {
       email: 'test@example.com',
     };
     
-    mockOnAuthStateChanged.mockImplementation((callback) => {
+    mockAuth.onAuthStateChanged.mockImplementation((callback: any) => {
+      // Set currentUser so it's available when the component checks auth.currentUser
+      mockAuth.currentUser = mockUser;
       setTimeout(() => callback(mockUser), 0);
       return jest.fn();
     });

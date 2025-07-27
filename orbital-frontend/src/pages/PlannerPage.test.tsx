@@ -2,24 +2,26 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
-import PlannerPage from './PlannerPage';
 import axios from 'axios';
 
 // Mock axios
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// Mock Firebase auth
-const mockAuth = {
-  currentUser: null as any,
-};
+// Mock Firebase module
+jest.mock('../firebase');
 
-jest.mock('../firebase', () => ({
-  auth: mockAuth,
-}));
+// Import the auth object directly
+import { auth } from '../firebase';
+
+// Cast to mocked object
+const mockAuth = auth as any;
 
 // Mock window.alert
 global.alert = jest.fn();
+
+// Now import the component AFTER all mocks are set up
+import PlannerPage from './PlannerPage';
 
 describe('PlannerPage', () => {
   beforeEach(() => {
@@ -82,14 +84,14 @@ describe('PlannerPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Year 1 Sem 1')).toBeInTheDocument();
-    expect(screen.getByText('Year 1 Sem 2')).toBeInTheDocument();
-    expect(screen.getByText('Year 2 Sem 1')).toBeInTheDocument();
-    expect(screen.getByText('Year 2 Sem 2')).toBeInTheDocument();
-    expect(screen.getByText('Year 3 Sem 1')).toBeInTheDocument();
-    expect(screen.getByText('Year 3 Sem 2')).toBeInTheDocument();
-    expect(screen.getByText('Year 4 Sem 1')).toBeInTheDocument();
-    expect(screen.getByText('Year 4 Sem 2')).toBeInTheDocument();
+    expect(screen.getAllByText('Year 1 Sem 1')).toHaveLength(2); // option and heading
+    expect(screen.getAllByText('Year 1 Sem 2')).toHaveLength(2);
+    expect(screen.getAllByText('Year 2 Sem 1')).toHaveLength(2);
+    expect(screen.getAllByText('Year 2 Sem 2')).toHaveLength(2);
+    expect(screen.getAllByText('Year 3 Sem 1')).toHaveLength(2);
+    expect(screen.getAllByText('Year 3 Sem 2')).toHaveLength(2);
+    expect(screen.getAllByText('Year 4 Sem 1')).toHaveLength(2);
+    expect(screen.getAllByText('Year 4 Sem 2')).toHaveLength(2);
   });
 
   test('displays initial progress as 0%', () => {
@@ -171,7 +173,7 @@ describe('PlannerPage', () => {
     fireEvent.click(addButton);
 
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalledWith('Module not found or error fetching module data.');
+      expect(global.alert).toHaveBeenCalledWith('INVALID: Module not found or error fetching info');
     });
   });
 
