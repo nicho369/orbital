@@ -74,7 +74,25 @@ describe('HomePage', () => {
 
   test('handles login button click', async () => {
     mockSignInWithPopup.mockResolvedValueOnce({
-      user: { displayName: 'Test User' },
+      user: {
+        displayName: 'Test User',
+        emailVerified: false,
+        isAnonymous: false,
+        metadata: {},
+        providerData: [],
+        refreshToken: '',
+        tenantId: null,
+        delete: jest.fn(),
+        email: 'testuser@example.com',
+        phoneNumber: null,
+        photoURL: null,
+        uid: 'test-uid',
+        getIdToken: jest.fn(),
+        getIdTokenResult: jest.fn(),
+        reload: jest.fn(),
+        toJSON: jest.fn(),
+        providerId: 'google.com', // Add this line to fix the error
+      },
       providerId: 'google.com',
       operationType: 'signIn',
     });
