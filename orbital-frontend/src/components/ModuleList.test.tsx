@@ -28,7 +28,7 @@ describe('ModuleList', () => {
     );
 
     render(<ModuleList />);
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByText('Loading modules...')).toBeInTheDocument();
   });
 
   test('renders module dropdown after successful data fetch', async () => {
@@ -39,11 +39,11 @@ describe('ModuleList', () => {
     render(<ModuleList />);
 
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading modules...')).not.toBeInTheDocument();
     });
 
     expect(screen.getByLabelText('Select a module:')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('-- Choose a module --')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('')).toBeInTheDocument();
     
     // Check if modules are in the dropdown
     expect(screen.getByText('CS1010 - Programming Methodology')).toBeInTheDocument();
@@ -57,12 +57,12 @@ describe('ModuleList', () => {
     render(<ModuleList />);
 
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading modules...')).not.toBeInTheDocument();
     });
 
-    // Should render the dropdown even with empty data
-    expect(screen.getByLabelText('Select a module:')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('-- Choose a module --')).toBeInTheDocument();
+    // Should render error message and retry button
+    expect(screen.getByText(/Unable to load modules/)).toBeInTheDocument();
+    expect(screen.getByText('Retry')).toBeInTheDocument();
   });
 
   test('allows user to select a module', async () => {
@@ -73,7 +73,7 @@ describe('ModuleList', () => {
     render(<ModuleList />);
 
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading modules...')).not.toBeInTheDocument();
     });
 
     const dropdown = screen.getByLabelText('Select a module:');
@@ -104,15 +104,15 @@ describe('ModuleList', () => {
     render(<ModuleList />);
 
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading modules...')).not.toBeInTheDocument();
     });
 
     const dropdown = screen.getByLabelText('Select a module:');
     expect(dropdown).toBeInTheDocument();
     
-    // Should only have the default option
+    // Should only have the default option with 0 modules
     const options = screen.getAllByRole('option');
     expect(options).toHaveLength(1);
-    expect(options[0]).toHaveTextContent('-- Choose a module --');
+    expect(options[0]).toHaveTextContent('-- Choose a module (0 available) --');
   });
 });
