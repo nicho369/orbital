@@ -104,70 +104,42 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 text-gray-800 flex flex-col items-center justify-start pt-8 px-4 pb-16">
-      <div className="w-full max-w-6xl mx-auto">
-        {/* Hero Section */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="inline-block mb-6 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold">
-            🎓 NUS School of Computing
-          </div>
-          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">
-            SoC GradWise
-          </h1>
-          <p className="text-2xl md:text-3xl text-white/90 font-light mb-8">
-            Plan Smart. Graduate Smoothly.
-          </p>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto mb-12">
-            Your intelligent companion for planning your academic journey at NUS Computing.
-            Track prerequisites, manage semesters, and graduate with confidence.
-          </p>
-
-          {/* Auth Section */}
-          <div className="glass-card p-8 max-w-md mx-auto mb-12">
-            {user ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-center gap-3 mb-6">
+    <main className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">SoC GradWise</h1>
+              <p className="text-sm text-gray-600 mt-1">NUS School of Computing</p>
+            </div>
+            <div>
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-gray-900">{user.displayName}</p>
+                    <p className="text-xs text-gray-500">Signed in</p>
+                  </div>
                   {user.photoURL && (
                     <img 
                       src={user.photoURL} 
                       alt="Profile" 
-                      className="w-16 h-16 rounded-full border-4 border-purple-500"
+                      className="w-10 h-10 rounded-full border-2 border-gray-200"
                     />
                   )}
-                  <div className="text-left">
-                    <p className="text-sm text-gray-500">Welcome back,</p>
-                    <p className="text-xl font-bold text-gray-800">{user.displayName}</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  <button
-                    onClick={saveStudyPlan}
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 flex items-center gap-2"
-                  >
-                    💾 Save Plan
-                  </button>
-                  <button
-                    onClick={loadStudyPlans}
-                    className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-purple-600 hover:to-indigo-700 flex items-center gap-2"
-                  >
-                    📂 Load Plans
-                  </button>
                   <button
                     onClick={handleLogout}
-                    className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-pink-700 flex items-center gap-2"
+                    className="bg-gray-100 text-gray-700 hover:bg-gray-200"
                   >
-                    🚪 Logout
+                    Logout
                   </button>
                 </div>
-              </div>
-            ) : (
-              <div>
-                <p className="text-gray-700 mb-6 text-lg">Sign in to start planning your journey</p>
+              ) : (
                 <button
                   onClick={handleLogin}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-blue-700 hover:to-purple-700 text-lg font-semibold shadow-xl flex items-center gap-3 mx-auto"
+                  className="bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
                 >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                     <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -175,66 +147,98 @@ const HomePage: React.FC = () => {
                   </svg>
                   Sign in with Google
                 </button>
-              </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Hero Section */}
+        <section className="text-center mb-16 animate-fade-in">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Plan Your Academic Journey
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+            Track prerequisites, manage semesters, and stay on top of your graduation requirements
+            with our intelligent planning tool designed for NUS Computing students.
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link to="/planner">
+              <button className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3">
+                Open Planner
+              </button>
+            </Link>
+            {user && (
+              <>
+                <button
+                  onClick={saveStudyPlan}
+                  className="bg-green-600 text-white hover:bg-green-700"
+                >
+                  Save Plan
+                </button>
+                <button
+                  onClick={loadStudyPlans}
+                  className="bg-gray-600 text-white hover:bg-gray-700"
+                >
+                  Load Plans
+                </button>
+              </>
             )}
           </div>
-
-          {/* CTA Button */}
-          <Link to="/planner">
-            <button className="bg-white text-purple-700 px-10 py-5 rounded-2xl text-xl font-bold shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300">
-              🚀 Start Planning Now
-            </button>
-          </Link>
-        </div>
+        </section>
 
         {/* Features Grid */}
-        <section className="grid md:grid-cols-3 gap-6 mb-16">
+        <section className="grid md:grid-cols-3 gap-6 mb-12">
           <FeatureCard
             icon="📊"
             title="Track Progress"
-            description="Monitor your journey with a visual progress bar showing modules completed towards your 40-module graduation requirement."
+            description="Visual progress tracking towards your 40-module graduation requirement."
           />
           <FeatureCard
-            icon="🔍"
-            title="Smart Prerequisites"
-            description="Automatic prerequisite and corequisite checking ensures you never plan a module without meeting its requirements."
+            icon="✓"
+            title="Prerequisites Check"
+            description="Automatic validation ensures you meet all module requirements."
           />
           <FeatureCard
             icon="📅"
             title="8-Semester Planning"
-            description="Plan all 4 years across 8 semesters with an intuitive interface designed for NUS Computing students."
+            description="Organize your 4-year journey across all semesters."
           />
           <FeatureCard
-            icon="💾"
+            icon="☁"
             title="Cloud Sync"
-            description="Your study plans are securely saved to the cloud and accessible from any device after signing in."
+            description="Access your study plans from any device, anywhere."
           />
           <FeatureCard
-            icon="📚"
+            icon="�"
             title="NUSMods Integration"
-            description="Real-time module data from NUSMods API with detailed information about every course."
+            description="Real-time module data and information."
           />
           <FeatureCard
-            icon="🎯"
+            icon="📈"
             title="Grade Tracking"
-            description="Record your grades for each module and keep track of your academic performance over time."
+            description="Monitor your academic performance over time."
           />
         </section>
 
-        {/* Module List Section */}
+        {/* Module Browser */}
         {user && (
-          <div className="glass-card p-8 mb-12 animate-fade-in">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">📖 Browse Available Modules</h2>
+          <section className="clean-card p-8 animate-fade-in">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Browse Modules</h2>
             <ModuleList />
-          </div>
+          </section>
         )}
-
-        {/* Footer */}
-        <footer className="text-center text-white/70 text-sm mt-16">
-          <p>Powered by React • TypeScript • Firebase • FastAPI</p>
-          <p className="mt-2">Made with ❤️ for NUS Computing Students</p>
-        </footer>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <p className="text-center text-sm text-gray-500">
+            Powered by React, TypeScript, Firebase, and FastAPI
+          </p>
+        </div>
+      </footer>
     </main>
   );
 };
@@ -246,12 +250,10 @@ interface FeatureCardProps {
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => (
-  <div className="glass-card p-6 hover:scale-105 transition-all duration-300 cursor-pointer group">
-    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{icon}</div>
-    <h3 className="font-bold text-xl text-gray-800 mb-3 group-hover:text-purple-700 transition-colors">
-      {title}
-    </h3>
-    <p className="text-gray-600 leading-relaxed">{description}</p>
+  <div className="clean-card p-6">
+    <div className="text-3xl mb-3">{icon}</div>
+    <h3 className="font-semibold text-lg text-gray-900 mb-2">{title}</h3>
+    <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
   </div>
 );
 

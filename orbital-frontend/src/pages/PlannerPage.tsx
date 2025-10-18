@@ -193,50 +193,63 @@ const PlannerPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <Link to="/">
-            <button className="glass-card px-6 py-3 text-white font-semibold hover:scale-105 transition-transform flex items-center gap-2">
-              ← Back to Home
-            </button>
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">📚 Module Planner</h1>
-          <div className="w-32"></div> {/* Spacer for centering */}
-        </div>
-
-        {/* Progress Bar */}
-        <div className="glass-card p-8 mb-8 animate-fade-in">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">🎓 Graduation Progress</h2>
-          <div className="w-full bg-gray-200 rounded-full h-8 mb-3 overflow-hidden shadow-inner">
-            <div
-              className="bg-gradient-to-r from-green-400 to-blue-500 h-8 rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-3"
-              style={{ width: `${progressPercent}%` }}
-            >
-              {progressPercent > 10 && (
-                <span className="text-white font-bold text-sm">{progressPercent}%</span>
-              )}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-center relative">
+            <Link to="/" className="absolute left-0">
+              <button className="bg-gray-100 text-gray-700 hover:bg-gray-200">
+                ← Home
+              </button>
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900 text-center">Module Planner</h1>
+            <div className="flex gap-2 absolute right-0">
+              <button 
+                onClick={savePlan} 
+                className="bg-green-600 text-white hover:bg-green-700"
+              >
+                Save
+              </button>
+              <button 
+                onClick={loadPlan} 
+                className="bg-gray-600 text-white hover:bg-gray-700"
+              >
+                Load
+              </button>
             </div>
           </div>
-          <div className="text-center text-gray-700 text-lg font-semibold">
-            <span className="text-2xl font-bold text-purple-700">{completedModules}</span>
-            <span className="mx-2">/</span>
-            <span className="text-2xl font-bold text-gray-800">{TOTAL_MODULES_REQUIRED}</span>
-            <span className="ml-2">modules completed</span>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Progress Card */}
+        <div className="clean-card p-6 mb-8 animate-fade-in">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Graduation Progress</h2>
+            <span className="text-sm text-gray-600">
+              <span className="font-semibold text-gray-900">{completedModules}</span> / {TOTAL_MODULES_REQUIRED} modules
+            </span>
           </div>
+          <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div
+              className="bg-blue-600 h-3 rounded-full transition-all duration-500"
+              style={{ width: `${progressPercent}%` }}
+            ></div>
+          </div>
+          <p className="text-sm text-gray-600 mt-2">{progressPercent}% complete</p>
         </div>
 
-        {/* Add Module Section */}
-        <div className="glass-card p-6 mb-8">
-          <h3 className="text-xl font-bold mb-4 text-gray-800">➕ Add New Module</h3>
-          <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Semester</label>
+        {/* Add Module Card */}
+        <div className="clean-card p-6 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Add Module</h3>
+          <div className="grid md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Semester</label>
               <select
                 value={selectedSemester}
                 onChange={(e) => setSelectedSemester(e.target.value)}
-                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring focus:ring-purple-200"
+                className="w-full"
                 aria-label="Select a semester"
               >
                 {semesters.map((sem) => (
@@ -244,22 +257,22 @@ const PlannerPage: React.FC = () => {
                 ))}
               </select>
             </div>
-            <div className="flex-1">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Module Code</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Module Code</label>
               <input
                 type="text"
                 placeholder="e.g. CS1101S"
                 value={moduleInput}
                 onChange={(e) => setModuleInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && addModule()}
-                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring focus:ring-purple-200"
+                className="w-full"
                 aria-label="Enter module code"
               />
             </div>
             <div className="flex items-end">
               <button
                 onClick={addModule}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 font-semibold shadow-lg w-full md:w-auto"
+                className="bg-blue-600 text-white hover:bg-blue-700 w-full"
               >
                 Add Module
               </button>
@@ -271,66 +284,41 @@ const PlannerPage: React.FC = () => {
         {warnings.length > 0 && (
           <div className="mb-6 space-y-2">
             {warnings.map((w, idx) => (
-              <div key={idx} className="glass-card p-4 border-l-4 border-red-500 bg-red-50/90">
-                <p className="text-red-700 font-semibold">
-                  ⚠️ {w.module}: {w.message}
+              <div key={idx} className="clean-card p-4 border-l-4 border-red-500 bg-red-50">
+                <p className="text-sm text-red-700 font-medium">
+                  {w.module}: {w.message}
                 </p>
               </div>
             ))}
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 mb-8 justify-center flex-wrap">
-          <button 
-            onClick={savePlan} 
-            className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 font-semibold shadow-lg flex items-center gap-2"
-          >
-            💾 Save Plan
-          </button>
-          <button 
-            onClick={loadPlan} 
-            className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-purple-600 hover:to-indigo-700 font-semibold shadow-lg flex items-center gap-2"
-          >
-            📂 Load Plan
-          </button>
-        </div>
-
         {/* Semester Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {semesters.map((sem, idx) => {
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {semesters.map((sem) => {
             const semModules = plan[sem] || [];
-            const semCredits = semModules.length * 4; // Assuming 4 MCs per module
+            const semCredits = semModules.length * 4;
             return (
-              <div 
-                key={sem} 
-                className="glass-card p-6 hover:scale-102 transition-all duration-300 animate-fade-in"
-                style={{ animationDelay: `${idx * 0.1}s` }}
-              >
+              <div key={sem} className="clean-card p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-bold text-lg text-gray-800">{sem}</h2>
-                  <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
+                  <h2 className="font-semibold text-gray-900">{sem}</h2>
+                  <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
                     {semCredits} MCs
                   </span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {semModules.length === 0 ? (
-                    <p className="text-gray-400 italic text-sm text-center py-8">No modules yet</p>
+                    <p className="text-sm text-gray-400 text-center py-6">No modules</p>
                   ) : (
                     semModules.map((mod, idx) => (
-                      <div 
-                        key={idx} 
-                        className="bg-white/50 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-white/80 transition-colors"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-gray-800">{mod}</span>
-                        </div>
+                      <div key={idx} className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <p className="font-medium text-sm text-gray-900 mb-2">{mod}</p>
                         <select
                           value={grades[mod] || ""}
                           onChange={e => handleGradeChange(mod, e.target.value)}
-                          className="mt-2 w-full border rounded-lg px-3 py-2 text-sm bg-white focus:border-purple-500 focus:ring focus:ring-purple-200"
+                          className="w-full text-xs"
                         >
-                          <option value="">Select Grade</option>
+                          <option value="">Grade</option>
                           {gradeOptions.map(opt => (
                             <option key={opt} value={opt}>{opt}</option>
                           ))}

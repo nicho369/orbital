@@ -51,21 +51,21 @@ const ModuleList: React.FC = () => {
   if (loading) {
     return (
       <div className="text-center py-8">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
-        <p className="mt-4 text-gray-600 font-medium">Loading modules...</p>
+        <div className="inline-block animate-spin rounded-full h-10 w-10 border-3 border-gray-300 border-t-blue-600"></div>
+        <p className="mt-3 text-sm text-gray-600">Loading modules...</p>
       </div>
     );
   }
 
   if (error && modules.length === 0) {
     return (
-      <div className="bg-red-50 border-2 border-red-300 rounded-xl p-6 text-center">
-        <p className="text-red-700 font-semibold mb-4">⚠️ Error: {error}</p>
+      <div className="clean-card p-6 border-l-4 border-red-500 bg-red-50">
+        <p className="text-red-700 font-medium mb-3">Error: {error}</p>
         <button 
           onClick={() => window.location.reload()} 
-          className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-red-600 hover:to-pink-700 font-semibold shadow-lg"
+          className="bg-red-600 text-white hover:bg-red-700"
         >
-          🔄 Retry
+          Retry
         </button>
       </div>
     );
@@ -74,21 +74,21 @@ const ModuleList: React.FC = () => {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg">
-          <p className="text-yellow-800 text-sm font-medium">⚡ {error}</p>
+        <div className="p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+          <p className="text-yellow-800 text-sm">{error}</p>
         </div>
       )}
-      <div className="space-y-2">
-        <label htmlFor="module-dropdown" className="block font-bold text-gray-800 text-lg">
-          Select a module:
+      <div>
+        <label htmlFor="module-dropdown" className="block text-sm font-medium text-gray-700 mb-2">
+          Select a module
         </label>
         <select
           id="module-dropdown"
           value={selected}
           onChange={e => setSelected(e.target.value)}
-          className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 text-base bg-white focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+          className="w-full"
         >
-          <option value="">-- Choose from {modules.length} available modules --</option>
+          <option value="">Choose from {modules.length} modules...</option>
           {modules.map((mod) => (
             <option key={mod.moduleCode} value={mod.moduleCode}>
               {mod.moduleCode} - {mod.title}
@@ -96,8 +96,8 @@ const ModuleList: React.FC = () => {
           ))}
         </select>
         {selected && (
-          <div className="mt-4 p-4 bg-purple-50 border-l-4 border-purple-500 rounded-lg">
-            <p className="text-purple-800 font-semibold">✓ Selected: {selected}</p>
+          <div className="mt-3 p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
+            <p className="text-sm text-blue-800 font-medium">Selected: {selected}</p>
           </div>
         )}
       </div>
