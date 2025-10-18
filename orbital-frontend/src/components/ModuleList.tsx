@@ -48,43 +48,59 @@ const ModuleList: React.FC = () => {
     fetchModules();
   }, []);
 
-  if (loading) return <div>Loading modules...</div>;
+  if (loading) {
+    return (
+      <div className="text-center py-8">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+        <p className="mt-4 text-gray-600 font-medium">Loading modules...</p>
+      </div>
+    );
+  }
 
   if (error && modules.length === 0) {
     return (
-      <div className="text-red-600">
-        <p>Error: {error}</p>
+      <div className="bg-red-50 border-2 border-red-300 rounded-xl p-6 text-center">
+        <p className="text-red-700 font-semibold mb-4">⚠️ Error: {error}</p>
         <button 
           onClick={() => window.location.reload()} 
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-red-600 hover:to-pink-700 font-semibold shadow-lg"
         >
-          Retry
+          🔄 Retry
         </button>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       {error && (
-        <div className="mb-2 p-2 bg-yellow-100 border border-yellow-400 rounded text-yellow-800">
-          <small>{error}</small>
+        <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg">
+          <p className="text-yellow-800 text-sm font-medium">⚡ {error}</p>
         </div>
       )}
-      <label htmlFor="module-dropdown" className="font-bold mr-2">Select a module:</label>
-      <select
-        id="module-dropdown"
-        value={selected}
-        onChange={e => setSelected(e.target.value)}
-        className="border rounded px-2 py-1"
-      >
-        <option value="">-- Choose a module ({modules.length} available) --</option>
-        {modules.map((mod) => (
-          <option key={mod.moduleCode} value={mod.moduleCode}>
-            {mod.moduleCode} - {mod.title}
-          </option>
-        ))}
-      </select>
+      <div className="space-y-2">
+        <label htmlFor="module-dropdown" className="block font-bold text-gray-800 text-lg">
+          Select a module:
+        </label>
+        <select
+          id="module-dropdown"
+          value={selected}
+          onChange={e => setSelected(e.target.value)}
+          className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 text-base bg-white focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all"
+        >
+          <option value="">-- Choose from {modules.length} available modules --</option>
+          {modules.map((mod) => (
+            <option key={mod.moduleCode} value={mod.moduleCode}>
+              {mod.moduleCode} - {mod.title}
+            </option>
+          ))}
+        </select>
+        {selected && (
+          <div className="mt-4 p-4 bg-purple-50 border-l-4 border-purple-500 rounded-lg">
+            <p className="text-purple-800 font-semibold">✓ Selected: {selected}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

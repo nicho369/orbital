@@ -193,88 +193,156 @@ const PlannerPage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      {/* Progress Bar */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-center">Graduation Progress</h2>
-        <div className="w-full bg-gray-200 rounded-full h-6 mb-2">
-          <div
-            className="bg-blue-600 h-6 rounded-full transition-all duration-500"
-            style={{ width: `${progressPercent}%` }}
-          ></div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <Link to="/">
+            <button className="glass-card px-6 py-3 text-white font-semibold hover:scale-105 transition-transform flex items-center gap-2">
+              ← Back to Home
+            </button>
+          </Link>
+          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">📚 Module Planner</h1>
+          <div className="w-32"></div> {/* Spacer for centering */}
         </div>
-        <div className="text-center text-gray-700 font-medium">
-          {completedModules} / {TOTAL_MODULES_REQUIRED} modules completed ({progressPercent}%)
-        </div>
-      </div>
-      <div className="mb-4">
-        <Link to="/">
-          <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">Back to Home</button>
-        </Link>
-      </div>
-      <h1 className="text-3xl font-bold mb-6 text-center">Module Planner</h1>
-      <div className="flex flex-col md:flex-row gap-4 items-center mb-6">
-        <select
-          value={selectedSemester}
-          onChange={(e) => setSelectedSemester(e.target.value)}
-          className="border rounded px-2 py-1"
-          aria-label="Select a semester"
-        >
-          {semesters.map((sem) => (
-            <option key={sem} value={sem}>{sem}</option>
-          ))}
-        </select>
-        <input
-          type="text"
-          placeholder="Enter module code (e.g. CS1101S)"
-          value={moduleInput}
-          onChange={(e) => setModuleInput(e.target.value)}
-          className="border rounded px-2 py-1"
-          aria-label="Enter module code"
-        />
-        <button
-          onClick={addModule}
-          className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800"
-        >
-          Add Module
-        </button>
-      </div>
-      {warnings.length > 0 && (
-        <div className="mb-4">
-          {warnings.map((w, idx) => (
-            <div key={idx} className="text-red-600 font-semibold">
-              {w.module}: {w.message}
+
+        {/* Progress Bar */}
+        <div className="glass-card p-8 mb-8 animate-fade-in">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">🎓 Graduation Progress</h2>
+          <div className="w-full bg-gray-200 rounded-full h-8 mb-3 overflow-hidden shadow-inner">
+            <div
+              className="bg-gradient-to-r from-green-400 to-blue-500 h-8 rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-3"
+              style={{ width: `${progressPercent}%` }}
+            >
+              {progressPercent > 10 && (
+                <span className="text-white font-bold text-sm">{progressPercent}%</span>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-      <div className="flex gap-4 mb-6 justify-center">
-        <button onClick={savePlan} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Plan</button>
-        <button onClick={loadPlan} className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Load Plan</button>
-      </div>
-      <div className="grid md:grid-cols-2 gap-6">
-        {semesters.map((sem) => (
-          <div key={sem} className="bg-gray-50 p-4 rounded shadow">
-            <h2 className="font-bold text-lg mb-2">{sem}</h2>
-            <ul>
-              {(plan[sem] || []).map((mod, idx) => (
-                <li key={idx} className="text-blue-800 flex items-center gap-2">
-                  <span>{mod}</span>
-                  <select
-                    value={grades[mod] || ""}
-                    onChange={e => handleGradeChange(mod, e.target.value)}
-                    className="ml-2 border rounded px-2 py-1 w-20 text-sm"
-                  >
-                    <option value="">Grade</option>
-                    {gradeOptions.map(opt => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                </li>
-              ))}
-            </ul>
           </div>
-        ))}
+          <div className="text-center text-gray-700 text-lg font-semibold">
+            <span className="text-2xl font-bold text-purple-700">{completedModules}</span>
+            <span className="mx-2">/</span>
+            <span className="text-2xl font-bold text-gray-800">{TOTAL_MODULES_REQUIRED}</span>
+            <span className="ml-2">modules completed</span>
+          </div>
+        </div>
+
+        {/* Add Module Section */}
+        <div className="glass-card p-6 mb-8">
+          <h3 className="text-xl font-bold mb-4 text-gray-800">➕ Add New Module</h3>
+          <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
+            <div className="flex-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Semester</label>
+              <select
+                value={selectedSemester}
+                onChange={(e) => setSelectedSemester(e.target.value)}
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring focus:ring-purple-200"
+                aria-label="Select a semester"
+              >
+                {semesters.map((sem) => (
+                  <option key={sem} value={sem}>{sem}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Module Code</label>
+              <input
+                type="text"
+                placeholder="e.g. CS1101S"
+                value={moduleInput}
+                onChange={(e) => setModuleInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addModule()}
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring focus:ring-purple-200"
+                aria-label="Enter module code"
+              />
+            </div>
+            <div className="flex items-end">
+              <button
+                onClick={addModule}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 font-semibold shadow-lg w-full md:w-auto"
+              >
+                Add Module
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Warnings */}
+        {warnings.length > 0 && (
+          <div className="mb-6 space-y-2">
+            {warnings.map((w, idx) => (
+              <div key={idx} className="glass-card p-4 border-l-4 border-red-500 bg-red-50/90">
+                <p className="text-red-700 font-semibold">
+                  ⚠️ {w.module}: {w.message}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex gap-4 mb-8 justify-center flex-wrap">
+          <button 
+            onClick={savePlan} 
+            className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 font-semibold shadow-lg flex items-center gap-2"
+          >
+            💾 Save Plan
+          </button>
+          <button 
+            onClick={loadPlan} 
+            className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-8 py-3 rounded-xl hover:from-purple-600 hover:to-indigo-700 font-semibold shadow-lg flex items-center gap-2"
+          >
+            📂 Load Plan
+          </button>
+        </div>
+
+        {/* Semester Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {semesters.map((sem, idx) => {
+            const semModules = plan[sem] || [];
+            const semCredits = semModules.length * 4; // Assuming 4 MCs per module
+            return (
+              <div 
+                key={sem} 
+                className="glass-card p-6 hover:scale-102 transition-all duration-300 animate-fade-in"
+                style={{ animationDelay: `${idx * 0.1}s` }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-bold text-lg text-gray-800">{sem}</h2>
+                  <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
+                    {semCredits} MCs
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  {semModules.length === 0 ? (
+                    <p className="text-gray-400 italic text-sm text-center py-8">No modules yet</p>
+                  ) : (
+                    semModules.map((mod, idx) => (
+                      <div 
+                        key={idx} 
+                        className="bg-white/50 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-white/80 transition-colors"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-gray-800">{mod}</span>
+                        </div>
+                        <select
+                          value={grades[mod] || ""}
+                          onChange={e => handleGradeChange(mod, e.target.value)}
+                          className="mt-2 w-full border rounded-lg px-3 py-2 text-sm bg-white focus:border-purple-500 focus:ring focus:ring-purple-200"
+                        >
+                          <option value="">Select Grade</option>
+                          {gradeOptions.map(opt => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
