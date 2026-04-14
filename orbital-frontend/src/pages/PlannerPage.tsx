@@ -195,16 +195,16 @@ const PlannerPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-white border-b border-gray-200 sticky top-0" style={{ zIndex: 'var(--z-sticky)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-center relative">
-            <Link to="/" className="absolute left-0">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <Link to="/" className="flex-shrink-0">
               <button className="bg-gray-100 text-gray-700 hover:bg-gray-200">
                 ← Home
               </button>
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900 text-center">Module Planner</h1>
-            <div className="flex gap-2 absolute right-0">
+            <h1 className="text-2xl font-bold text-gray-900 text-center flex-1 min-w-[150px]">Module Planner</h1>
+            <div className="flex gap-2 flex-shrink-0">
               <button 
                 onClick={savePlan} 
                 className="bg-green-600 text-white hover:bg-green-700"

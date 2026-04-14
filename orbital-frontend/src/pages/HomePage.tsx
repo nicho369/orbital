@@ -106,14 +106,14 @@ const HomePage: React.FC = () => {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white border-b border-gray-200 sticky top-0" style={{ zIndex: 'var(--z-sticky)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="text-center flex-1 min-w-[200px]">
               <h1 className="text-3xl font-bold text-gray-900">SoC GradWise</h1>
               <p className="text-sm text-gray-600 mt-1">NUS School of Computing</p>
             </div>
-            <div>
+            <div className="flex items-center gap-4 flex-shrink-0">
               {user ? (
                 <div className="flex items-center gap-4">
                   <div className="text-right">
@@ -153,19 +153,19 @@ const HomePage: React.FC = () => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <section className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+        <section className="text-center mb-20 animate-fade-in">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">
             Plan Your Academic Journey
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
             Track prerequisites, manage semesters, and stay on top of your graduation requirements
             with our intelligent planning tool designed for NUS Computing students.
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex gap-4 justify-center flex-wrap items-center">
             <Link to="/planner">
-              <button className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3">
+              <button className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition-colors">
                 Open Planner
               </button>
             </Link>
@@ -173,13 +173,13 @@ const HomePage: React.FC = () => {
               <>
                 <button
                   onClick={saveStudyPlan}
-                  className="bg-green-600 text-white hover:bg-green-700"
+                  className="bg-green-600 text-white hover:bg-green-700 px-6 py-3 rounded-lg font-medium transition-colors"
                 >
                   Save Plan
                 </button>
                 <button
                   onClick={loadStudyPlans}
-                  className="bg-gray-600 text-white hover:bg-gray-700"
+                  className="bg-gray-600 text-white hover:bg-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
                 >
                   Load Plans
                 </button>
@@ -189,7 +189,7 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Features Grid */}
-        <section className="grid md:grid-cols-3 gap-6 mb-12">
+        <section className="grid md:grid-cols-3 gap-8 mb-16">
           <FeatureCard
             icon="📊"
             title="Track Progress"
@@ -206,12 +206,12 @@ const HomePage: React.FC = () => {
             description="Organize your 4-year journey across all semesters."
           />
           <FeatureCard
-            icon="☁"
+            icon="☁️"
             title="Cloud Sync"
             description="Access your study plans from any device, anywhere."
           />
           <FeatureCard
-            icon="�"
+            icon="🔷"
             title="NUSMods Integration"
             description="Real-time module data and information."
           />
@@ -225,7 +225,7 @@ const HomePage: React.FC = () => {
         {/* Module Browser */}
         {user && (
           <section className="clean-card p-8 animate-fade-in">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Browse Modules</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Browse Modules</h2>
             <ModuleList />
           </section>
         )}
@@ -250,9 +250,9 @@ interface FeatureCardProps {
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => (
-  <div className="clean-card p-6">
-    <div className="text-3xl mb-3">{icon}</div>
-    <h3 className="font-semibold text-lg text-gray-900 mb-2">{title}</h3>
+  <div className="clean-card hover-lift p-8 text-center">
+    <div className="text-4xl mb-4">{icon}</div>
+    <h3 className="font-semibold text-lg text-gray-900 mb-3">{title}</h3>
     <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
   </div>
 );
